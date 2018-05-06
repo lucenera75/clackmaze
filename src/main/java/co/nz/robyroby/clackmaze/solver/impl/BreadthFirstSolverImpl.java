@@ -11,9 +11,9 @@ import co.nz.robyroby.clackmaze.solver.exceptions.NoPossiblePathException;
 
 /**
  * A bfs implementation guarantee that whenever I touch the finishNode that would be the shortest path. The Big O (the wow effect for
- * friends) is supposed to be O(|N| + |E|) tending to O(|N|) if the graph is sparse and O(|N^2|) if the graph is dense. The number of
- * "edges" to traverse |E| is |N|^2 in the most dense case, considering also loops. Again, in this case it is not actually N^2 but the most
- * dense case would be ( |N|-1 + |N|-2 + |N|-3 + |N|-4 ... + |N| - m) where m < |N|
+ * friends) is supposed to be O(|N| + |E|) tending to O(|N|) if the graph is sparse and O(|N^2|) if the graph is dense (and cyclic). The
+ * number of "edges" to traverse |E| is |N|^2 in the most dense case, considering also loops. Again, in this case it is not actually N^2 but
+ * the most dense case would be ( |N|-1 + |N|-2 + |N|-3 + |N|-4 ... + |N| - m) where m < |N|
  * 
  * Even if we assume the Graph as acyclic I'm recording the visited nodes anyways to avoid the multifather effect This is not necessary,
  * because we don't risk a loop (being the graph acyclic), but in this case I would discuss my concerns before choosing the final
@@ -39,16 +39,16 @@ public class BreadthFirstSolverImpl extends Solver {
 		visitNode(alreadyVisitedNodes, queue, startNode);
 
 		while (!queue.isEmpty()) {
-			
+
 			numSteps += 1;
 			Set<GraphNode> nodes = new HashSet<>(queue);
 			queue.clear();
 
 			nodes.forEach(node -> {
 				// visit the all the linked nodes
-				node.getDirectlyLinkedNodes().forEach(linkedNode -> visitNode(alreadyVisitedNodes, queue, linkedNode));	
+				node.getDirectlyLinkedNodes().forEach(linkedNode -> visitNode(alreadyVisitedNodes, queue, linkedNode));
 			});
-			
+
 			if (queue.contains(finishNode)) {
 				return numSteps;
 			}
